@@ -13,15 +13,20 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
+import {useCollection} from "react-firebase-hooks/firestore"
+import { auth, db } from './firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 function Sidebar() {
+    const[channels]=useCollection(db.collection("rooms"))
+    const [user]=useAuthState(auth)
     return (
         <SidebarContainer>
             <SidebarHeader>
                 <SidebarInfo>
-   <h2>Papa Fam</h2>
+              <h2>Papa Fam</h2>
    <h3>
     <FiberManualRecordIcon/>
-    Aswin</h3>
+    {user.displayName}</h3>
                 </SidebarInfo>
                 <CreateIcon/>
             </SidebarHeader>
@@ -37,6 +42,9 @@ function Sidebar() {
             <SidebarOption Icon={ExpandMoreIcon} title="Channels" />
             <hr/>
             <SidebarOption Icon={AddIcon} addChannelOption title="Add Channel" />
+            {channels?.docs.map(doc=>(
+                <SidebarOption key={doc.id} id={doc.id} title={doc.data().name} />
+            ))}
         </SidebarContainer>
     )
 }
@@ -48,7 +56,8 @@ background-color:var(--slack-color);
 flex:0.3;
 border-top:1px solid #49274b;
 max-width:260px;
-margin-top:60px
+margin-top:60px;
+
 >hr{
     margin-top:10px;
     margin-bottom:10px;
@@ -59,6 +68,7 @@ const SidebarHeader = styled.div`
 display:flex;
 border-bottom:1px solid #49274b;
 padding:13px;
+
 >.MuiSvgIcon-root{
     padding:8px;
     color:#49274b;
@@ -69,6 +79,7 @@ padding:13px;
 `
 const SidebarInfo = styled.div`
 flex:1;
+
 >h2{
     font-size:15px;
     font-weight:900;
