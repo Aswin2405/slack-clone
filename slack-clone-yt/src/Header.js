@@ -16,6 +16,7 @@ function Header() {
 src={user?.photoURL}
 alt={user?.displayName}
 //TODO: Add onClick
+
 />
 <AccessTimeIcon/>
             </HeaderLeft>
